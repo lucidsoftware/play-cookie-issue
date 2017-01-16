@@ -1,7 +1,6 @@
 # play-cookie-issue
 
-When discarding cookies any subsequent operations cause max-age to
-revert back to 0 instead of -86400.
+/ok is handled with `Ok.discardingCookies(DiscardingCookie("test"))`.
 
     $ curl -v localhost:9000/ok
     > GET /ok HTTP/1.1
@@ -15,7 +14,9 @@ revert back to 0 instead of -86400.
     < Date: Mon, 16 Jan 2017 20:16:18 GMT
     <
 
-Notice `Max-Age=-84400`.
+Notice `Max-Age=-86400`.
+
+/bad is handled with `Ok.discardingCookies(DiscardingCookie("test")).withCookies(Cookie("other", "value"))`.
 
     $ curl -v localhost:9000/bad
     > GET /bad HTTP/1.1
@@ -31,9 +32,5 @@ Notice `Max-Age=-84400`.
     <
 
 Notice `Max-Age=0`.
-
-In the first request, the action used calls
-`Ok.discardingCookies(DiscardingCookie("test"))`. In the latter request
-`.withCookies(Cookie("other", "value"))` is added.
 
 See: https://github.com/lucidsoftware/play-cookie-issue/blob/master/app/Controller.scala
